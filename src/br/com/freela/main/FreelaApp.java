@@ -7,6 +7,12 @@ import br.com.freela.model.TipoCadastro;
 import br.com.freela.service.CadastroService;
 import br.com.freela.service.DadosCadastro;
 import br.com.freela.service.ValidadorCadastro;
+import br.com.freela.exception.PedidoInvalidoException;
+import br.com.freela.model.Cliente;
+import br.com.freela.model.PedidoTrabalho;
+import br.com.freela.model.Perfil;
+import br.com.freela.model.TipoTrabalho;
+import br.com.freela.model.Trabalhador;
 
 public class FreelaApp {
 
@@ -14,6 +20,7 @@ public class FreelaApp {
 
     // DAOs falsos: só contam as chamadas
     private static class ClienteFalso implements ClienteRepositorio {
+
         int chamadas = 0;
 
         @Override
@@ -24,6 +31,7 @@ public class FreelaApp {
     }
 
     private static class TrabalhadorFalso implements TrabalhadorRepositorio {
+
         int chamadas = 0;
         String ultimoTipoTrabalho;
 
@@ -55,8 +63,8 @@ public class FreelaApp {
                 lancaErro(() -> validador.validarDados(trabalhador(""))));
         verificar("Nome só com espaços lança erro",
                 lancaErro(() -> validador.validarDados(new DadosCadastro(
-                        "   ", "111", "222", "Curitiba", "a@b.com", "123", "9999",
-                        TipoCadastro.CLIENTE, ""))));
+                "   ", "111", "222", "Curitiba", "a@b.com", "123", "9999",
+                TipoCadastro.CLIENTE, ""))));
 
         // Cadastro de cliente
         ClienteFalso clientes = new ClienteFalso();
@@ -84,6 +92,36 @@ public class FreelaApp {
         verificar("TipoCadastro converte o texto do combo",
                 TipoCadastro.doRotulo("Trabalhador") == TipoCadastro.TRABALHADOR);
 
+        // Testes do PedidoTrabalho
+        PedidoTrabalho pedido = new PedidoTrabalho(
+                1,
+                null,
+                null,
+                new TipoTrabalho(1, "Eletricista", "Serviço elétrico"),
+                "Curitiba",
+                150.00
+        );
+
+        pedido.cancelarPedido();
+
+        verificar("Pedido pendente pode ser cancelado",
+                "Cancelado".equals(pedido.getStatus()));
+
+// Pedido confirmado não pode ser cancelado
+        PedidoTrabalho pedidoConfirmado = new PedidoTrabalho(
+                2,
+                null,
+                null,
+                new TipoTrabalho(1, "Eletricista", "Serviço elétrico"),
+                "Curitiba",
+                200.00
+        );
+
+        pedidoConfirmado.confirmarPedido();
+
+        verificar("Pedido confirmado não pode ser cancelado",
+                lancaErroPedido(() -> pedidoConfirmado.cancelarPedido()));
+
         System.out.println(falhas == 0
                 ? "\nTodos os testes passaram."
                 : "\nTestes com falha: " + falhas);
@@ -104,6 +142,15 @@ public class FreelaApp {
             acao.run();
             return false;
         } catch (DadosInvalidosException e) {
+            return true;
+        }
+    }
+
+    private static boolean lancaErroPedido(Runnable acao) {
+        try {
+            acao.run();
+            return false;
+        } catch (PedidoInvalidoException e) {
             return true;
         }
     }

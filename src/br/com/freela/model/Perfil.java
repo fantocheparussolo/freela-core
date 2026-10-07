@@ -53,6 +53,5 @@ public class Perfil {
     public String getTelefone() {
         return telefonePerfil;
     }
-    
-}
 
+}
