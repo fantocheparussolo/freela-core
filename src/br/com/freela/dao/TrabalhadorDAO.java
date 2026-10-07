@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TrabalhadorDAO {
+public class TrabalhadorDAO implements TrabalhadorRepositorio {
 
+    @Override
     public void cadastrarTrabalhador(String nome, String cpf, String rg, String cidade,
             String email, String senha, String telefone, String tipoTrabalho) {
 
@@ -25,7 +26,7 @@ public class TrabalhadorDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao cadastrar trabalhador: " + e.getMessage());
+            throw new RuntimeException("Erro ao cadastrar trabalhador: " + e.getMessage(), e);
         }
     }
 }

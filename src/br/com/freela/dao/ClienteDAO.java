@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ClienteDAO {
+public class ClienteDAO implements ClienteRepositorio {
 
+    @Override
     public void cadastrarCliente(String nome, String cpf, String rg, String cidade,
             String email, String senha, String telefone) {
 
@@ -24,7 +25,7 @@ public class ClienteDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao cadastrar cliente: " + e.getMessage());
+            throw new RuntimeException("Erro ao cadastrar cliente: " + e.getMessage(), e);
         }
     }
 }
