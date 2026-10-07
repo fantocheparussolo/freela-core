@@ -1,7 +1,7 @@
 package br.com.freela.model;
 
-import br.com.freela.model.Perfil;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Trabalhador extends Perfil {
@@ -17,11 +17,7 @@ public class Trabalhador extends Perfil {
         tiposTrabalho.add(tipo);
     }
 
-    public void exibirTiposTrabalho() {
-        System.out.println("Tipos de trabalho de: " + getNome() + ":");
-        for (String tipo : tiposTrabalho) {
-            System.out.println("- " + tipo);
-        }
+    public List<String> getTiposTrabalho() {
+        return Collections.unmodifiableList(tiposTrabalho);
     }
-
 }
