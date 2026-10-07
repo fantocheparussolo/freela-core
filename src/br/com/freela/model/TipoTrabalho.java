@@ -23,10 +23,4 @@ public class TipoTrabalho {
     public String getDescricaoTrabalho() {
         return descricaoTrabalho;
     }
-
-    public void exibirInformacao() {
-        System.out.println("Tipo de trabalho: " + nomeTrabalho);
-        System.out.println("Descrição do trabalho: " + descricaoTrabalho);
-    }
-
 }

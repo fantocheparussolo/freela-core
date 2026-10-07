@@ -1,6 +1,7 @@
 package br.com.freela.model;
 
 import br.com.freela.model.Cliente;
+import br.com.freela.exception.PedidoInvalidoException;
 
 public class PedidoTrabalho {
 
@@ -55,22 +56,13 @@ public class PedidoTrabalho {
     }
 
     public void cancelarPedido() {
-        if (!status.equals("Confirmado")) {
-            this.status = "Cancelado";
-        } else {
-            System.out.println("Não é possível cancelar um pedidio já confirmado.");
-        }
+    if (!status.equals("Confirmado")) {
+        this.status = "Cancelado";
+    } else {
+        throw new PedidoInvalidoException(
+            "Não é possível cancelar um pedido já confirmado."
+        );
     }
-
-    public void exibirPedido() {
-        System.out.println("Pedido: " + idPedido);
-        System.out.println("Cliente: " + cliente.getNome());
-        System.out.println("Trabalhador: " + trabalhador.getNome());
-        System.out.println("Tipo de trabalho(s): " + tipoTrabalho.getNomeTrabalho());
-        System.out.println("Local: " + local);
-        System.out.println("Valor proposto: R$ " + valorProposto);
-        System.out.println("Status: " + status);
-
-    }
+}
 
 }
